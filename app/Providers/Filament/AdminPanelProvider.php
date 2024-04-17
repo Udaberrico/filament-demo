@@ -10,6 +10,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\SpatieLaravelTranslatablePlugin;
+use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -18,6 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Udaberrico\FilamentSoftTheme\FilamentSoftTheme;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -26,7 +28,6 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->login(Login::class)
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -63,6 +64,22 @@ class AdminPanelProvider extends PanelProvider
             ->plugin(
                 SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'es', 'nl']),
-            );
+            )->plugin(
+                FilamentSoftTheme::make()
+            )
+            ->login(\Udaberrico\FilamentSoftTheme\Filament\Pages\Login::class)
+            ->colors(
+                [
+                    ...FilamentSoftTheme::getColors(),
+                    'primary' => Color::Pink,
+                    'primary-accent' => Color::Purple,
+                    'primary-contrast' => '#ffffff',
+                ]
+            )
+            ->icons(
+                FilamentSoftTheme::getIcons()
+            )
+            ->viteTheme('resources/css/filament/app/theme.css')
+            ;
     }
 }
